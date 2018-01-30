@@ -1,23 +1,20 @@
 <template>
   <div class="hello">
-    <div id="currencyPrice">BTC/USD: 1 BTC = {{price}} USD
-    </div>
+    <div id="currencyPrice">BTC/USD: 1 BTC = {{price}} USD</div>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
+  import getService from '../services/getService.js'
 
-export default {
-  name: 'hello',
+  export default {
   data: () => ({
     price: ""
   }),
 
-  created: async function () {
-     const json = await axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
-     this.price = json.data.bpi.USD.rate
-    }
+  created () {
+    this.price = getService.price
+  }
 }
 </script>
 

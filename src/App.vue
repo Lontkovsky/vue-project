@@ -11,23 +11,13 @@ import HelloWorld from './components/HelloWorld'
 export default {
 
   data() {
-  return{
-    currencyPrice: {
+  return {
 
-    }
   }
   },
 
   components: {
     HelloWorld
-  },
-
-  methods: {
-    getCurrencyPrice: function() {
-      this.$http.get('/https://api.coindesk.com/v1/bpi/currentprice.json', {
-
-      })
-    }
   }
 }
 </script>
