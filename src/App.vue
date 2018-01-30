@@ -1,19 +1,49 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld/>
+    <HelloWorld :currentPrice="currentPrice"/>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
+import Vue from "vue"
+import Vuex from "vuex"
+import Vapi from "vuex-rest-api"
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource);
+
+Vue.use(Vuex)
+
+const posts = new Vapi({
+  baseURL: "https://api.coindesk.com/v1/bpi/currentprice.json",
+  state: {
+    prices: {}
+  }
+})
+
+  .get({
+    action: "getCurrencyRate",
+    property: "prices",
+    path: "/"
+  })
+  .getStore()
+
+const store = new Vuex.Store(posts)
 
 export default {
 
   data() {
   return {
-
+    currentPrice: ""
   }
+  },
+
+  created() {
+    store.dispatch('getCurrencyRate')
+      .then(() => {
+        this.currentPrice = store.state.prices.bpi.USD.rate
+      })
   },
 
   components: {
