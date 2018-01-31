@@ -1,26 +1,32 @@
 <template>
   <div id='wrapper'>
-    <form action='' class='form' id="form" v-on:submit.prevent="submit">
+    <form @submit.prevent="validateBeforeSubmit" class='form' v-on:submit.prevent="onSubmit">
       <h1>Contact Us</h1>
-      <p class='field'>
-        <input class='text-input' v-model="formData.name" id='name' name='name' required type='text' placeholder="Name">
-      </p>
-      <p class='field'>
-        <input class='text-input' v-model="formData.email" id='email' name='email' required type='email' placeholder="Email">
-      </p>
-      <p class='field'>
-        <textarea class='textarea' v-model="formData.text" cols='10' id='message' name='message' required rows='1' placeholder="Message"></textarea>
-      </p>
-      <p class='field'>
+      <div class='field'>
+        <input class='text-input' v-validate="'required|alpha'" v-model="formData.name" id='name' name='name' type='text' placeholder="Name">
+        <span v-show="errors.has('name')" class="is-danger">{{ errors.first('name') }}</span>
+      </div>
+      <div class="field">
+        <input class="text-input" v-validate="'required|email'" v-model="formData.email" id='email' name='email' type='email' placeholder="Email">
+        <span v-show="errors.has('email')" class="is-danger">{{ errors.first('email') }}</span>
+      </div>
+      <div class='field'>
+        <textarea class='textarea' v-validate="'required'" v-model="formData.text" cols='10' id='message' name='message' rows='1' placeholder="Message"></textarea>
+        <span v-show="errors.has('message')" class="is-danger">{{ errors.first('message') }}</span>
+      </div>
+      <div class='field'>
         <input class='button' type='submit' value='Submit' >
-      </p>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
-
+  import Vue from 'vue'
+  import VeeValidate from 'vee-validate';
   import {Post} from '../services/postService.js'
+
+  Vue.use(VeeValidate);
 
   export default {
 
@@ -34,13 +40,26 @@
       }
     },
 
-    methods:{
-      async submit () {
+    methods: {
+      async onSubmit() {
         await Post(this.formData)
+      },
+
+      validateBeforeSubmit() {
+        this.$validator.validateAll().then((result) => {
+          if (result) {
+            alert('Form Submitted!');
+            return;
+          }
+          alert('Please fill the inputs');
+    })
       }
     }
   }
 </script>
+
+
+
 
 <style>
   .form .text-input, .form .textarea, .form .label, .form .button {
@@ -189,6 +208,10 @@
 
   svg path {
     fill: black;
+  }
+
+  .is-danger{
+    color:red;
   }
 
 </style>
