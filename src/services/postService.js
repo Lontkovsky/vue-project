@@ -9,7 +9,7 @@ export const HTTP = axios.create({
 
 
 export const Post = (formData) => {
-  return HTTP.post('https://develop.growthchannel.io/api/customer_contact', {
+  return HTTP.post('/customer_contact', {
       email: formData.email,
       name: formData.name,
       text: formData.text
