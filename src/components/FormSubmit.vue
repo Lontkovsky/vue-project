@@ -1,18 +1,18 @@
 <template>
   <div id='wrapper'>
-    <form action='' class='form'>
+    <form action='' class='form' id="form" v-on:submit.prevent="post">
       <h1>Contact Us</h1>
       <p class='field'>
-        <input class='text-input' id='name' name='name' required type='text' placeholder="Name">
+        <input class='text-input' v-model="formData.name" id='name' name='name' required type='text' placeholder="Name">
       </p>
       <p class='field'>
-        <input class='text-input' id='email' name='email' required type='email' placeholder="Email">
+        <input class='text-input' v-model="formData.email" id='email' name='email' required type='email' placeholder="Email">
       </p>
       <p class='field'>
-        <textarea class='textarea' cols='10' id='message' name='message' required rows='1' placeholder="Message"></textarea>
+        <textarea class='textarea' v-model="formData.text" cols='10' id='message' name='message' required rows='1' placeholder="Message"></textarea>
       </p>
       <p class='field'>
-        <input class='button' type='submit' value='Submit'>
+        <input class='button' type='submit' value='Submit' >
       </p>
     </form>
   </div>
@@ -21,6 +21,25 @@
 <script>
   export default {
 
+    data() {
+      return {
+        formData: {
+          email: "",
+          name: "",
+          text: ""
+        }
+      }
+    },
+
+    methods: {
+      post: function () {
+        this.$http.post('https://develop.growthchannel.io/api/customer_contact', {
+          email: this.formData.email,
+          name: this.formData.name,
+          text: this.formData.text
+        })
+      }
+    }
   }
 </script>
 
