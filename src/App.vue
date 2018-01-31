@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <HelloWorld :currentPrice="currentPrice"/>
+    <FormSubmit/>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
+import FormSubmit from './components/FormSubmit'
 import Vue from "vue"
 import Vuex from "vuex"
 import Vapi from "vuex-rest-api"
@@ -47,7 +49,8 @@ export default {
   },
 
   components: {
-    HelloWorld
+    HelloWorld,
+    FormSubmit
   }
 }
 </script>
