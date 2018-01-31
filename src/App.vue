@@ -6,62 +6,62 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
-import FormSubmit from './components/FormSubmit'
-import Vue from "vue"
-import Vuex from "vuex"
-import Vapi from "vuex-rest-api"
-import VueResource from 'vue-resource'
+  import HelloWorld from './components/HelloWorld'
+  import FormSubmit from './components/FormSubmit'
+  import Vue from "vue"
+  import Vuex from "vuex"
+  import Vapi from "vuex-rest-api"
+  import VueResource from 'vue-resource'
 
-Vue.use(VueResource);
+  Vue.use(VueResource);
 
-Vue.use(Vuex)
+  Vue.use(Vuex)
 
-const posts = new Vapi({
-  baseURL: "https://api.coindesk.com/v1/bpi/currentprice.json",
-  state: {
-    prices: {}
-  }
-})
-
-  .get({
-    action: "getCurrencyRate",
-    property: "prices",
-    path: "/"
+  const posts = new Vapi({
+    baseURL: "https://api.coindesk.com/v1/bpi/currentprice.json",
+    state: {
+      prices: {}
+    }
   })
-  .getStore()
 
-const store = new Vuex.Store(posts)
+    .get({
+      action: "getCurrencyRate",
+      property: "prices",
+      path: "/"
+    })
+    .getStore()
 
-export default {
+  const store = new Vuex.Store(posts)
 
-  data() {
-  return {
-    currentPrice: ""
+  export default {
+
+    data() {
+      return {
+        currentPrice: ""
+      }
+    },
+
+    created() {
+      store.dispatch('getCurrencyRate')
+        .then(() => {
+          this.currentPrice = store.state.prices.bpi.USD.rate
+        })
+    },
+
+    components: {
+      HelloWorld,
+      FormSubmit
+    }
   }
-  },
-
-  created() {
-    store.dispatch('getCurrencyRate')
-      .then(() => {
-        this.currentPrice = store.state.prices.bpi.USD.rate
-      })
-  },
-
-  components: {
-    HelloWorld,
-    FormSubmit
-  }
-}
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
 </style>

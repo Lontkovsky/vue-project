@@ -1,6 +1,6 @@
 <template>
   <div id='wrapper'>
-    <form action='' class='form' id="form" v-on:submit.prevent="post">
+    <form action='' class='form' id="form" v-on:submit.prevent="submit">
       <h1>Contact Us</h1>
       <p class='field'>
         <input class='text-input' v-model="formData.name" id='name' name='name' required type='text' placeholder="Name">
@@ -19,6 +19,9 @@
 </template>
 
 <script>
+
+  import {Post} from '../services/postService.js'
+
   export default {
 
     data() {
@@ -31,13 +34,9 @@
       }
     },
 
-    methods: {
-      post: function () {
-        this.$http.post('https://develop.growthchannel.io/api/customer_contact', {
-          email: this.formData.email,
-          name: this.formData.name,
-          text: this.formData.text
-        })
+    methods:{
+      async submit () {
+        await Post(this.formData)
       }
     }
   }

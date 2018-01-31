@@ -1,5 +1,5 @@
 <template>
-    <div id="currencyPrice">BTC/USD: 1 BTC = {{currentPrice}} USD</div>
+  <div id="currencyPrice">BTC/USD: 1 BTC = {{currentPrice}} USD</div>
 </template>
 
 <script>
@@ -10,5 +10,5 @@
         default: ""
       },
     }
-}
+  }
 </script>
