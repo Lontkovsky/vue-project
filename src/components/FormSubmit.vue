@@ -4,13 +4,15 @@
       <h1>Contact Us</h1>
       <div class='field'>
         <input class='text-input' v-model="formData.name" id='name' name='name' type='text' placeholder="Name">
+        <span v-if="showNameMsg" class="danger">{{nameErrorMsg}}</span>
       </div>
       <div class="field">
         <input class="text-input" v-model="formData.email" id='email' name='email' type='text' placeholder="Email">
-        <span v-if="showMsg" class="danger">{{errorMsg}}</span>
+        <span v-if="showEmailMsg" class="danger">{{emailErrorMsg}}</span>
       </div>
       <div class='field'>
         <textarea class='textarea' v-model="formData.text" cols='10' id='message' name='message' rows='1' placeholder="Message"></textarea>
+        <span v-if="showTextMsg" class="danger">{{textErrorMsg}}</span>
       </div>
       <div class='field'>
         <input class='button' type='submit' value='Submit' >
@@ -36,8 +38,13 @@
           text: "",
         },
 
-        showMsg: false,
-        errorMsg: ''
+        showEmailMsg: false,
+        showNameMsg: false,
+        showTextMsg: false,
+
+        emailErrorMsg: '',
+        nameErrorMsg: '',
+        textErrorMsg: ''
       }
 
 
@@ -45,16 +52,30 @@
 
     methods: {
       async onSubmit() {
-        if (this.formData.email.indexOf("@") === -1 ) {
-          this.showMsg = true;
+        if (this.formData.email.indexOf("@.") === -1) {
+          this.showEmailMsg = true;
         }
-        try {
-          await Post(this.formData)
-        } catch (e) {
-          this.errorMsg = e.response.data.email[0];
+        else this.showEmailMsg = false;
+
+        if (this.formData.name === "") {
+          this.showNameMsg = true;
+        }
+        else this.showNameMsg = false;
+
+        if (this.formData.text === "") {
+          this.showTextMsg = true;
+        }
+        else this.showTextMsg = false;
+
+          try {
+            await Post(this.formData)
+          } catch (e) {
+            this.emailErrorMsg = e.response.data.email[0];
+            this.textErrorMsg = e.response.data.text[0];
+            this.nameErrorMsg = e.response.data.name[0];
+          }
         }
       }
-    }
   }
 </script>
 
