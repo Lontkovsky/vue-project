@@ -7,10 +7,13 @@ export const HTTP = axios.create({
   }
 })
 
-export const Post = (formData) => {
+export const Post = (formData) =>
+{
   return HTTP.post('/customer_contact', {
-      email: formData.email,
-      name: formData.name,
-      text: formData.text
+    email: formData.email,
+    name: formData.name,
+    text: formData.text,
+
   })
 }
+

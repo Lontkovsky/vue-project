@@ -1,18 +1,16 @@
 <template>
   <div id='wrapper'>
-    <form @submit.prevent="validateBeforeSubmit" class='form' v-on:submit.prevent="onSubmit">
+    <form class='form' v-on:submit.prevent="onSubmit">
       <h1>Contact Us</h1>
       <div class='field'>
-        <input class='text-input' v-validate="'required|alpha'" v-model="formData.name" id='name' name='name' type='text' placeholder="Name">
-        <span v-show="errors.has('name')" class="is-danger">{{ errors.first('name') }}</span>
+        <input class='text-input' v-model="formData.name" id='name' name='name' type='text' placeholder="Name">
       </div>
       <div class="field">
-        <input class="text-input" v-validate="'required|email'" v-model="formData.email" id='email' name='email' type='email' placeholder="Email">
-        <span v-show="errors.has('email')" class="is-danger">{{ errors.first('email') }}</span>
+        <input class="text-input" v-model="formData.email" id='email' name='email' type='text' placeholder="Email">
+        <span v-if="showMsg" class="danger">{{errorMsg}}</span>
       </div>
       <div class='field'>
-        <textarea class='textarea' v-validate="'required'" v-model="formData.text" cols='10' id='message' name='message' rows='1' placeholder="Message"></textarea>
-        <span v-show="errors.has('message')" class="is-danger">{{ errors.first('message') }}</span>
+        <textarea class='textarea' v-model="formData.text" cols='10' id='message' name='message' rows='1' placeholder="Message"></textarea>
       </div>
       <div class='field'>
         <input class='button' type='submit' value='Submit' >
@@ -35,24 +33,26 @@
         formData: {
           email: "",
           name: "",
-          text: ""
-        }
+          text: "",
+        },
+
+        showMsg: false,
+        errorMsg: ''
       }
+
+
     },
 
     methods: {
       async onSubmit() {
-        await Post(this.formData)
-      },
-
-      validateBeforeSubmit() {
-        this.$validator.validateAll().then((result) => {
-          if (result) {
-            alert('Form Submitted!');
-            return;
-          }
-          alert('Please fill the inputs');
-    })
+        if (this.formData.email.indexOf("@") === -1 ) {
+          this.showMsg = true;
+        }
+        try {
+          await Post(this.formData)
+        } catch (e) {
+          this.errorMsg = e.response.data.email[0];
+        }
       }
     }
   }
@@ -62,6 +62,10 @@
 
 
 <style>
+
+  .danger{
+    color:red;
+  }
   .form .text-input, .form .textarea, .form .label, .form .button {
     padding: 1em 1.5em;
     -webkit-appearance: none;
@@ -103,12 +107,6 @@
     border-color: transparent transparent black transparent;
   }
 
-  .form .label {
-    position: absolute;
-    z-index: 10;
-    pointer-events: none;
-    padding-left: 0;
-  }
 
   .form h1{
       font-size: 1.5em;
@@ -116,13 +114,6 @@
       margin-top: 20px;
   }
 
-  .form .label {
-    top: 0;
-    left: 0;
-    color: rgba(0, 0, 0, 0.7);
-    -webkit-transition: color 0.3s;
-    transition: color 0.3s;
-  }
   .active .form .label, .form .active .label {
     font-size: 0.75em;
     line-height: 1;
@@ -131,9 +122,6 @@
     padding: 0;
     color: rgba(0, 0, 0, 0.7);
     background: white;
-  }
-  .focus .form .label, .form .focus .label {
-    color: black;
   }
 
   .form.has-floated-label .field:after {
@@ -164,8 +152,8 @@
     transition: all 200ms;
   }
   .form .button:hover, .form .button:focus, .form .button:active {
-    background-color: white;
-    color: #333333;
+    background-color: #00963d;
+    color: #fff;
     outline: 0;
   }
   .form .button:active {
@@ -208,10 +196,6 @@
 
   svg path {
     fill: black;
-  }
-
-  .is-danger{
-    color:red;
   }
 
 </style>
