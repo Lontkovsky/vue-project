@@ -42,8 +42,7 @@
     filters: {
       toText: function (value) {
         if (!value) return ''
-        value = value.toString()
-        return value
+        return value.toString()
       }
     },
 
