@@ -3,30 +3,27 @@
     <form class='form' v-on:submit.prevent="onSubmit">
       <h1>Contact Us</h1>
       <div class='field'>
-        <input class='text-input' v-model="formData.name" id='name' name='name' type='text' placeholder="Name">
-        <span v-if="showNameMsg" class="danger">{{nameErrorMsg}}</span>
+        <input class='text-input' v-model="formData.name" id='name' type='text' placeholder="Name">
+        <span class="danger">{{errArray['name']?errArray['name'].toString():''}}</span>
       </div>
       <div class="field">
-        <input class="text-input" v-model="formData.email" id='email' name='email' type='text' placeholder="Email">
-        <span v-if="showEmailMsg" class="danger">{{emailErrorMsg}}</span>
+        <input class="text-input" v-model="formData.email" id='email' type='text' placeholder="Email">
+        <span class="danger">{{errArray['email']?errArray['email'].toString():''}}</span>
       </div>
       <div class='field'>
-        <textarea class='textarea' v-model="formData.text" cols='10' id='message' name='message' rows='1' placeholder="Message"></textarea>
-        <span v-if="showTextMsg" class="danger">{{textErrorMsg}}</span>
+        <textarea class='textarea' v-model="formData.text" cols='10' id='text' rows='1' placeholder="Message"></textarea>
+        <span class="danger">{{errArray['text']?errArray['text'].toString():''}}</span>
       </div>
       <div class='field'>
         <input class='button' type='submit' value='Submit' >
       </div>
+      <span id='err' class="danger"></span>
     </form>
   </div>
 </template>
 
 <script>
-  import Vue from 'vue'
-  import VeeValidate from 'vee-validate';
   import {Post} from '../services/postService.js'
-
-  Vue.use(VeeValidate);
 
   export default {
 
@@ -37,57 +34,29 @@
           name: "",
           text: "",
         },
-
-        showEmailMsg: false,
-        showNameMsg: false,
-        showTextMsg: false,
-
-        emailErrorMsg: '',
-        nameErrorMsg: '',
-        textErrorMsg: ''
+        errArray: [],
       }
-
-
     },
 
     methods: {
       async onSubmit() {
-        if (this.formData.email.indexOf("@.") === -1) {
-          this.showEmailMsg = true;
-        }
-        else this.showEmailMsg = false;
-
-        if (this.formData.name === "") {
-          this.showNameMsg = true;
-        }
-        else this.showNameMsg = false;
-
-        if (this.formData.text === "") {
-          this.showTextMsg = true;
-        }
-        else this.showTextMsg = false;
-
-          try {
-            await Post(this.formData)
-          } catch (e) {
-            this.emailErrorMsg = e.response.data.email[0];
-            this.textErrorMsg = e.response.data.text[0];
-            this.nameErrorMsg = e.response.data.name[0];
-          }
+        try {
+          await Post(this.formData)
+        } catch (e) {
+          this.errArray = e.response.data;
         }
       }
+    }
   }
 </script>
-
-
-
 
 <style>
 
   .danger{
     color:red;
   }
-  .form .text-input, .form .textarea, .form .label, .form .button {
+
+  .form .text-input, .form .textarea, .form .button {
     padding: 1em 1.5em;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -121,30 +90,17 @@
     border-left-color: white;
     border-right-color: white;
   }
-  .form .error.text-input, .form .error.textarea, .error .form .text-input, .form .error .text-input, .error .form .textarea, .form .error .textarea {
+   .error .form .text-input, .form .error .text-input, .error .form .textarea, .form .error .textarea {
     border-color: transparent transparent red transparent;
   }
   .form:not(.has-floated-label) .text-input:active, .form:not(.has-floated-label) .textarea:active, .form:not(.has-floated-label) .text-input:focus, .form:not(.has-floated-label) .textarea:focus {
     border-color: transparent transparent black transparent;
   }
-
-
   .form h1{
       font-size: 1.5em;
       font-weight: 200;
       margin-top: 20px;
   }
-
-  .active .form .label, .form .active .label {
-    font-size: 0.75em;
-    line-height: 1;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding: 0;
-    color: rgba(0, 0, 0, 0.7);
-    background: white;
-  }
-
   .form.has-floated-label .field:after {
     content: "";
     position: absolute;
@@ -155,11 +111,9 @@
     -webkit-transition: width 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
     transition: width 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   }
-
   .form.has-floated-label .field.focus:after {
     width: 100%;
   }
-
   .form .button {
     background-color: #00963d;
     border: 2px solid white;
@@ -182,7 +136,6 @@
     top: 1px;
     left: 1px;
   }
-
   .form {
     max-width: 30em;
     margin: 2em auto;
@@ -214,9 +167,4 @@
   .form .textarea {
     max-width: 100%;
   }
-
-  svg path {
-    fill: black;
-  }
-
 </style>
