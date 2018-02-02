@@ -4,15 +4,15 @@
       <h1>Contact Us</h1>
       <div class='field'>
         <input class='text-input' v-model="formData.name" id='name' type='text' placeholder="Name">
-        <span class="danger">{{errArray.name[0]}}</span>
+        <span class="danger">{{errArray.name | toText}}</span>
       </div>
       <div class="field">
         <input class="text-input" v-model="formData.email" id='email' type='text' placeholder="Email">
-        <span class="danger">{{errArray.email[0]}}</span>
+        <span class="danger">{{errArray.email | toText}}</span>
       </div>
       <div class='field'>
         <textarea class='textarea' v-model="formData.text" cols='10' id='text' rows='1' placeholder="Message"></textarea>
-        <span class="danger">{{errArray.text[0]}}</span>
+        <span class="danger">{{errArray.text | toText}}</span>
       </div>
       <div class='field'>
         <input class='button' type='submit' value='Submit' >
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+
   import {Post} from '../services/postService.js'
 
   export default {
@@ -35,6 +36,14 @@
       return {
         formData: variables,
         errArray: variables,
+      }
+    },
+
+    filters: {
+      toText: function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value
       }
     },
 
