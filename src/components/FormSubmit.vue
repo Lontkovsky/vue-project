@@ -4,15 +4,15 @@
       <h1>Contact Us</h1>
       <div class='field'>
         <input class='text-input' v-model="formData.name" id='name' type='text' placeholder="Name">
-        <span class="danger">{{errArray['name']?errArray['name'].toString():''}}</span>
+        <span class="danger">{{errArray.name[0]}}</span>
       </div>
       <div class="field">
         <input class="text-input" v-model="formData.email" id='email' type='text' placeholder="Email">
-        <span class="danger">{{errArray['email']?errArray['email'].toString():''}}</span>
+        <span class="danger">{{errArray.email[0]}}</span>
       </div>
       <div class='field'>
         <textarea class='textarea' v-model="formData.text" cols='10' id='text' rows='1' placeholder="Message"></textarea>
-        <span class="danger">{{errArray['text']?errArray['text'].toString():''}}</span>
+        <span class="danger">{{errArray.text[0]}}</span>
       </div>
       <div class='field'>
         <input class='button' type='submit' value='Submit' >
@@ -27,13 +27,14 @@
   export default {
 
     data() {
+      let variables = {
+        email: "",
+        name: "",
+        text: "",
+      };
       return {
-        formData: {
-          email: "",
-          name: "",
-          text: "",
-        },
-        errArray: [],
+        formData: variables,
+        errArray: variables,
       }
     },
 
