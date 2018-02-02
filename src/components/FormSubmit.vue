@@ -17,7 +17,6 @@
       <div class='field'>
         <input class='button' type='submit' value='Submit' >
       </div>
-      <span id='err' class="danger"></span>
     </form>
   </div>
 </template>
